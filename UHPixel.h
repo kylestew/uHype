@@ -4,14 +4,21 @@
   TODO: License info here
 
  ****************************************************/
-#ifndef UHSHAPE_H
-#define UHSHAPE_H
+#ifndef UHPIXEL_H
+#define UHPIXEL_H
 
-class UHShape {
+#include "FastLED.h"
+
+class UHPixel {
 public:
+  UHPixel();
+  UHPixel(float _x, float _y, CRGB _color);
+
+  float x, y;
+  CRGB color;
 
 private:
 
 };
 
-#endif // UHSHAPE_H
+#endif // UHPIXEL_H

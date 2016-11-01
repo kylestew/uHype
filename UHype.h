@@ -9,27 +9,33 @@
 
 #include "FastLED.h"
 
-#include "UHShape.h"
-#include "UHCanvas.h"
+#include "UHPixel.h"
 
 class UHype {
 public:
-  UHype();
+  UHype(int rows, int columns);
 
-  init(??? type, int pin, int count);
+  void init();
+  void brightness(uint8_t brightness); // 0-100
+  void background(CRGB);
+  void autoClear(boolean autoClear);
+  void fade(uint8_t amount); // 0-100
 
-  // void autoClear(boolean autoClear);
-  // void fade(int amount);
-  // void background();
-  // void setBrightness();
-  //
-  // void add();
-  //
-  // void drawStage();
+  void add(UHPixel pixel);
 
+  void draw();
+  void delayFPS(int targetFPS);
 
 private:
+  struct CRGB *_leds;
+  int _ledCount, _ledRows, _ledColumns;
+  CRGB _background;
+  boolean _autoClear;
+  uint8_t _fade;
 
+  UHPixel _pixel;
+
+  void clear();
 };
 
 #endif // UHYPE_H
