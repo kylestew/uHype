@@ -2,6 +2,15 @@
 ## Micro Hype - Animation library for Neopixels
 
 
+== TODO TODO TODO ==
++ Oscillate sine wave of dots
++ Cycle colors in sine wave from palette
+
++ Image blob frame animator
+
+
+
+
 Requires FastLED
 
 

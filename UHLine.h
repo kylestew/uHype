@@ -4,21 +4,20 @@
   TODO: License info here
 
  ****************************************************/
-#ifndef UHPIXEL_H
-#define UHPIXEL_H
+#ifndef UHLINE_H
+#define UHLINE_H
 
-#include "FastLED.h"
+#include "UHDrawable.h"
 
-class UHPixel {
+class UHLine : UHDrawable {
 public:
-  UHPixel();
-  UHPixel(float _x, float _y, CRGB _color);
+  UHLine(float x0, float y0, CRGB _color);
 
-  float x, y;
+  float x0, y0, x1, y1;
   CRGB color;
 
 private:
 
 };
 
-#endif // UHPIXEL_H
+#endif

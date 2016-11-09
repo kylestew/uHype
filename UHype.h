@@ -9,11 +9,17 @@
 
 #include "FastLED.h"
 
-#include "UHPixel.h"
+#include "UHDrawable.h"
+#include "UHRect.h"
+#include "UHColorPool.h"
 
 class UHype {
 public:
   UHype(int rows, int columns);
+
+  // TODO: decon
+  // for (auto p : _drawables)
+// delete p;
 
   void init();
   void brightness(uint8_t brightness); // 0-100
@@ -21,7 +27,7 @@ public:
   void autoClear(boolean autoClear);
   void fade(uint8_t amount); // 0-100
 
-  void add(UHPixel pixel);
+  void add(UHDrawable* drawable);
 
   void draw();
   void delayFPS(int targetFPS);
@@ -33,7 +39,8 @@ private:
   boolean _autoClear;
   uint8_t _fade;
 
-  UHPixel _pixel;
+  int drawCount = 0;
+  UHDrawable **_drawables = new UHDrawable*[100];
 
   void clear();
 };

@@ -37,8 +37,29 @@ void UHype::clear() {
   fill_solid(&(_leds[0]), _ledCount, _background);
 }
 
-void UHype::add(UHPixel pixel) {
-  _pixel = pixel;
+void UHype::add(UHDrawable* drawable) {
+  // store pointer
+  _drawables[drawCount++] = drawable;
+
+
+  // TODO: make dynamic
+  // create new larger array
+  // UHDrawable *temp = new UHDrawable[drawCount + 1];
+  //
+  // // copy old array into temp
+  // if (_drawables != nullptr) {
+  //   memcpy(temp, _drawables, drawCount * sizeof(UHDrawable));
+  // }
+  //
+  // // insert new item
+  // temp[drawCount] = pixel;
+  //
+  // // delete old array
+  // delete[] _drawables;
+  //
+  // // set temp as new array
+  // _drawables = temp;
+  // drawCount++;
 }
 
 void UHype::draw() {
@@ -48,10 +69,19 @@ void UHype::draw() {
     // TODO: fade
   }
 
-  // is pixel onscreen?
-  if (_pixel.x < _ledRows && _pixel.y < _ledColumns) {
-    int idx = (_pixel.y - 1) * _ledColumns + (_pixel.x - 1);
-    _leds[idx] = _pixel.color;
+  // perform draw on all drawables
+  // AUTO?
+  for (int i = 0; i < drawCount; i++) {
+    // why the '&'???
+    UHDrawable *drawable = _drawables[i];
+
+    // is it onscreen?
+  //   if (pixel.x < _ledRows + 1 && pixel.y < _ledColumns + 1) {
+  //     int idx = (pixel.y - 1) * _ledColumns + (pixel.x - 1);
+  //     _leds[idx] = pixel.color;
+  //   }
+
+    drawable->draw(_leds, _ledRows, _ledColumns);
   }
 
   FastLED.show();
