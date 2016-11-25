@@ -10,8 +10,6 @@ void setup() {
   hype.init();
   hype.brightness(33);
   hype.background(0x000000);
-  hype.autoClear(true);
-  // hype.fade(2);
 
 
   // build a color palette

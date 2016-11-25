@@ -1,45 +1,62 @@
-#ifndef HYPE_H
-#define HYPE_H
+#ifndef UHYPE_H
+#define UHYPE_H
 
 #include "FastLED.h"
 
-#include "Drawable.h"
-#include "Point.h"
-#include "Rect.h"
+#include "UHDrawable.h"
+#include "UHPoint.h"
 
-class Hype {
+#include "UHColorPool.h"
+
+#include "UHOscillator.h"
+
+class UHype {
 public:
-  Hype(int width, int height)
-    : width{width}, height{height}, frameCount{0} {
-
+  UHype(int width, int height)
+    : width{width}, height{height}, frameCount{0}, autoClear{true} {
     pixelCount = width * height;
     pixels = new CRGB[pixelCount];
-
-    // autoClear = true;
-
     clear();
   }
-  ~Hype() {
+  ~UHype() {
     delete[] pixels;
+
+    // TODO: loop delete all drawables
   }
 
   void setBackground(CRGB _background) {
     background = _background;
   }
 
-  void add(Drawable* drawable) {
+  void add(UHDrawable* drawable) {
+    drawables[drawCount++] = drawable;
+  }
+
+  void add(UHOscillator* osc) {
+    effectors[effectorCount++] = osc;
+  }
+
+  void update() {
+    // TODO: run update on all effectors
+    for (int i = 0; i < effectorCount; i++) {
+      UHOscillator *osc = effectors[i];
+      osc->update(timeDelta);
+    }
   }
 
   void draw() {
-    // if (autoClear)
-    clear();
+    if (autoClear)
+      clear();
     // else: fade
 
-    // TODO: draw those shapes!
+    for (int i = 0; i < drawCount; i++) {
+      UHDrawable *drawable = drawables[i];
+      drawable->draw(pixels, width, height);
+    }
 
     std::cout << "Draw Frame: " << frameCount << std::endl;
-    frameCount++;
     dumpBMP();
+    frameCount++;
   }
 
   void delayFPS(int targetFPS) {}
@@ -47,10 +64,17 @@ public:
 private:
   int width, height;
   int pixelCount;
-  CRGB *pixels;
+  struct CRGB *pixels;
   CRGB background;
-
   int frameCount;
+  bool autoClear;
+
+  // TODO: simplify?
+  int drawCount = 0;
+  UHDrawable **drawables = new UHDrawable*[100];
+
+  int effectorCount = 0;
+  UHOscillator **effectors = new UHOscillator*[10];
 
   void clear() {
     FastLED.clear();
@@ -62,8 +86,8 @@ private:
     // draw bitmap to disk
     FILE *f;
     unsigned char *img = NULL;
-    char filename[13];
-    snprintf(filename, sizeof(char) * 13, "out_%04d.bmp", frameCount);
+    char filename[22];
+    snprintf(filename, sizeof(char) * 22, "./output/out_%04d.bmp", frameCount);
     int filesize = 54 * 3*width*height; // 54 byte header + 3 bytes per pixel
     if (img)
       free(img);
@@ -73,11 +97,12 @@ private:
     // fill image with actual data
     int x, y;
     int r, g, b;
-    for (int i = 0; i < width; ++i) {
-      for (int j = 0; j < height; ++j) {
-        x=i; y=(height-1)-j;
+    for (int col = 0; col < width; ++col) { // scan left-to-right
+      for (int row = 0; row < height; ++row) { // scan up-to-down
+        // x=col; y=(height-1)-j; // drawing upside down
+        x=col; y=row; // drawing upside down
 
-        int idx = j+height+i;
+        int idx = col+(width*row);
         r = pixels[idx].r;
         g = pixels[idx].g;
         b = pixels[idx].b;

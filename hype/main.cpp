@@ -1,25 +1,32 @@
 #include <iostream>
-#include "Hype.h"
+#include "UHype.h"
 using namespace std;
 
 const int ANIM_FPS = 30;
-
-const int WIDTH = 320;
-const int HEIGHT = 240;
-Hype hype(WIDTH, HEIGHT);
+const int PIXELS_WIDTH = 8;
+const int PIXELS_HEIGHT = 8;
+UHype hype(PIXELS_WIDTH, PIXELS_HEIGHT);
 
 int main() {
-  hype.setBackground(0xff2299);
-  // hype.autoClear();
+  hype.setBackground(0x000000);
 
-  // hype.add(new Point(2, 3));
-  // hype.add(new Rect(10, 20, 30, 40));
-  // hype.add(Circle(5, 15, 12));
-  // TODO: line
+  // build a color palette
+  CRGB colorList[] = {0xFFFFFF, 0xF7F7F7, 0xECECEC, 0x333333, 0x0095a8, 0x00616f, 0xFF3300, 0xFF6600};
+  UHColorPool colors(colorList, sizeof(colorList)/sizeof(colorList[0]));
 
-  // TODO: render loop
-  const int LOOPS = 4;
+  // create line of points
+  // for (int i = 0; i < PIXELS_WIDTH; i++) {
+  //   hype.add(new UHPoint(i, 0.0, colors.getColor()));
+  // }
+
+  UHPoint point = new UHPoint(0.0, 0.0, colors.getColor());
+  hype.add(point);
+  hype.add(new UHOscillator(point));
+
+  // render some test frames
+  const int LOOPS = 1;
   for (int i = 0; i < LOOPS; ++i) {
+    hype.update();
     hype.draw();
     hype.delayFPS(ANIM_FPS);
   }

@@ -27,11 +27,38 @@ struct CRGB {
   // 0xRRGGBB
   inline CRGB(uint32_t colorcode)
     : r((colorcode >> 16) & 0xFF), g((colorcode >> 8) & 0xFF), b((colorcode >> 0) & 0xFF) {}
+
+
+        /// allow copy construction
+    	inline CRGB(const CRGB& rhs) __attribute__((always_inline))
+        {
+            r = rhs.r;
+            g = rhs.g;
+            b = rhs.b;
+        }
+    /// allow assignment from one RGB struct to another
+inline CRGB& operator= (const CRGB& rhs) __attribute__((always_inline))
+{
+    r = rhs.r;
+    g = rhs.g;
+    b = rhs.b;
+    return *this;
+}
+
+/// allow assignment from 32-bit (really 24-bit) 0xRRGGBB color code
+inline CRGB& operator= (const uint32_t colorcode) __attribute__((always_inline))
+{
+    r = (colorcode >> 16) & 0xFF;
+    g = (colorcode >>  8) & 0xFF;
+    b = (colorcode >>  0) & 0xFF;
+    return *this;
+}
+
 };
 
   // override cout stream for output
 std::ostream& operator << (std::ostream &out, const CRGB &val) {
-  out << val.r;
+  out << val.r << " " << val.g << " " << val.b;
   return out;
 }
 
